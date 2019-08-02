@@ -115,7 +115,6 @@ class WaterfallLayout: UICollectionViewLayout {
         return bounds.width != newBounds.width
     }
     
-    // swiftlint:disable function_body_length
     override func prepare() {
         super.prepare()
         

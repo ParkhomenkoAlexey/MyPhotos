@@ -15,8 +15,7 @@ protocol Networking {
 class NetworkService: Networking {
 
     var timeoutInterval = 30.0
-    
-    
+
     // построение запроса данных по URL
     func request(searchTerm: String, completion: @escaping (Data?, Error?) -> Void) {
 
@@ -37,7 +36,12 @@ class NetworkService: Networking {
     
     func prepareHeaders() -> [String: String]? {
         var headers = [String: String]()
-        headers["Authorization"] = "Client-ID bea9b8eca503ce9fca1a07b37dc6c9bf84f9b77b1027c4763ee46266d9cdc67f"
+        headers["Authorization"] = "Client-ID bea9b8eca503ce9fca1a07b37dc6c9bf84f9b77b1027c4763ee46266d9cdc67f" // вот сюда
+        // 1. зайти на сайт https://unsplash.com
+        // 2. залогинься
+        // 3. справа сверху около твоей аватарки есть кнопка •••, нажми ее и выбери API/Developers
+        // 4. создай новое приложение и получи Access Key и Secret key
+        // 5. свой Access Key вставь вместо моего на строчке 39
         return headers
     }
     
@@ -72,7 +76,6 @@ class NetworkService: Networking {
         return URLSession.shared.dataTask(with: requst, completionHandler: { (data, response, error) in
             DispatchQueue.main.async {
                 completion(data, error)
-                
             }
         })
     }

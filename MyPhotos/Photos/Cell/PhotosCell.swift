@@ -24,7 +24,7 @@ class PhotosCell: UICollectionViewCell {
     let photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .green
+        imageView.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
@@ -37,8 +37,7 @@ class PhotosCell: UICollectionViewCell {
     
     var unsplashPhoto: UnsplashPhoto! {
         didSet {
-            let photoUrl = unsplashPhoto.urls["regular"] // спорный момент лично для меня
-            // вот тут надо добавить в url два параметра из разряда max-w max-h чтобы не подгружалась картинка больше чем это необходимо
+            let photoUrl = unsplashPhoto.urls["regular"] // спорный момент, лично для меня
             guard let imageUrl = photoUrl, let url = URL(string: imageUrl) else { return }
             photoImageView.sd_setImage(with: url, completed: nil)
         }
@@ -46,7 +45,7 @@ class PhotosCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        photoImageView.setImage(imageURL: nil)
+        photoImageView.image = nil
     }
     
     override init(frame: CGRect) {
@@ -60,7 +59,6 @@ class PhotosCell: UICollectionViewCell {
     private func updateSelectedState() {
         photoImageView.alpha = isSelected ? 0.7 : 1
         checkmark.alpha = isSelected ? 1 : 0
-        
     }
     
     private func setupPhotoImageView() {
@@ -80,5 +78,4 @@ class PhotosCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }

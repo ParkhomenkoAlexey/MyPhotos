@@ -8,8 +8,6 @@
 
 import Foundation
 
-
-
 struct SearchResult: Decodable {
     let total: Int
     let total_pages: Int
@@ -21,7 +19,7 @@ struct UnsplashPhoto: Decodable {
     let width: Int
     let urls: [URLKind.RawValue: String]
     
-    enum URLKind: String, Codable {
+    enum URLKind: String {
         case raw
         case full
         case regular

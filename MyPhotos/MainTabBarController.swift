@@ -19,19 +19,18 @@ class MainTabBarController: UITabBarController {
         
         tabBar.tintColor = #colorLiteral(red: 0.008419650607, green: 0.8583433032, blue: 0.6806535125, alpha: 1)
         viewControllers = [
-            generateNavigationController(with: PhotosCollectionViewController(collectionViewLayout: WaterfallLayout()), title: "Photos"),
-            generateNavigationController(with: ViewController(), title: "Albums")
-            
+            generateNavigationController(with: PhotosCollectionViewController(collectionViewLayout: WaterfallLayout()), title: "Photos", image: #imageLiteral(resourceName: "Regular-M")),
+            generateNavigationController(with: LikesCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout()), title: "Favourites", image: #imageLiteral(resourceName: "heart"))
         ]
     }
     
-    func generateNavigationController(with rootViewController: UIViewController, title: String) -> UIViewController {
+    func generateNavigationController(with rootViewController: UIViewController, title: String, image: UIImage) -> UIViewController {
         let navController = UINavigationController(rootViewController: rootViewController)
 //        navController.navigationBar.prefersLargeTitles = true
 //        rootViewController.navigationItem.title = title
         navController.navigationBar.shadowImage = UIImage()
         navController.tabBarItem.title = title
-        //navController.tabBarItem.image = image
+        navController.tabBarItem.image = image
         return navController
     }
 }
