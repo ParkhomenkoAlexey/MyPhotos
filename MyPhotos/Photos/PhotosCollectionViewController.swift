@@ -95,18 +95,12 @@ class PhotosCollectionViewController: UICollectionViewController {
         })
         print(selectedPhotos)
         let shareController = UIActivityViewController(activityItems: selectedPhotos ?? [UIImage](), applicationActivities: nil)
-//        present(shareController, animated: true, completion: nil)
-//        if let popOver = shareController.popoverPresentationController {
-//            popOver.sourceView = self.view
-//            //popOver.sourceRect =
-//            //popOver.barButtonItem
-//        }
         
-        if let popoverController = shareController.popoverPresentationController {
-            popoverController.sourceRect = CGRect(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2, width: 0, height: 0)
-            popoverController.sourceView = self.view
-            popoverController.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
-        }
+//        if let popoverController = shareController.popoverPresentationController {
+//            popoverController.sourceRect = CGRect(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2, width: 0, height: 0)
+//            popoverController.sourceView = self.view
+//            popoverController.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
+//        }
         
         self.present(shareController, animated: true, completion: nil)
         
