@@ -41,12 +41,7 @@ class PhotosCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let titleLabel = UILabel(text: "PHOTOS", font: .systemFont(ofSize: 15, weight: .medium), textColor: #colorLiteral(red: 0.5, green: 0.5, blue: 0.5, alpha: 1))
-        navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: titleLabel)
-        navigationItem.rightBarButtonItems = [actionBarButtonItem, addBarButtonItem]
-        navigationController?.hidesBarsOnSwipe = true
-        actionBarButtonItem.isEnabled = false
-        addBarButtonItem.isEnabled = false
+        
         
         collectionView.allowsMultipleSelection = true
         collectionView.contentInsetAdjustmentBehavior = .automatic
@@ -54,11 +49,21 @@ class PhotosCollectionViewController: UICollectionViewController {
         collectionView.backgroundColor = .white
         collectionView.register(PhotosCell.self, forCellWithReuseIdentifier: PhotosCell.reuseId)
         
+        setupNavigationBar()
         setupSearchBar()
         
         if let waterfallLayout = collectionViewLayout as? WaterfallLayout {
             waterfallLayout.delegate = self
         }
+    }
+    
+    func setupNavigationBar() {
+        let titleLabel = UILabel(text: "PHOTOS", font: .systemFont(ofSize: 15, weight: .medium), textColor: #colorLiteral(red: 0.5, green: 0.5, blue: 0.5, alpha: 1))
+        navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: titleLabel)
+        navigationItem.rightBarButtonItems = [actionBarButtonItem, addBarButtonItem]
+        navigationController?.hidesBarsOnSwipe = true
+        actionBarButtonItem.isEnabled = false
+        addBarButtonItem.isEnabled = false
     }
     
     func setupSearchBar() {
@@ -75,35 +80,37 @@ class PhotosCollectionViewController: UICollectionViewController {
     }
     
     @objc private func addBarButtonTapped(sender: AnyObject?) {
-        
         print(#function)
         
     }
     
-    @objc private func actionBarButtonTapped(sender: AnyObject?) {
+    @objc private func actionBarButtonTapped(sender: UIBarButtonItem) {
         
-        print(#function)
-        let selectedPhotos = collectionView.indexPathsForSelectedItems?.reduce([], { (photosss, indexPath) -> [UIImage] in
+        var selectedPhotos = collectionView.indexPathsForSelectedItems?.reduce([], { (photosss, indexPath) -> [UIImage] in
             var mutablePhotos = photosss
-            let cell = collectionView.cellForItem(at: indexPath) as! PhotosCell
             
-            if let image = cell.photoImageView.image {
-                mutablePhotos.append(image)
-            }
 
+            let photo = photos[indexPath.item]
+            print(photo.urls)
+            let photoUrl = photo.urls["small"]
+            let imageView = UIImageView()
+            imageView.setImage(imageURL: photoUrl)
+            guard let image = imageView.image else { return mutablePhotos }
+            mutablePhotos.append(image)
+            
+            
             return mutablePhotos
         })
-        print(selectedPhotos)
+        print("selectedPhotos:", selectedPhotos)
+        
         let shareController = UIActivityViewController(activityItems: selectedPhotos ?? [UIImage](), applicationActivities: nil)
         
-//        if let popoverController = shareController.popoverPresentationController {
-//            popoverController.sourceRect = CGRect(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2, width: 0, height: 0)
-//            popoverController.sourceView = self.view
-//            popoverController.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
-//        }
-        
-        self.present(shareController, animated: true, completion: nil)
-        
+        shareController.popoverPresentationController?.barButtonItem = sender
+        shareController.popoverPresentationController?.permittedArrowDirections = .any
+        present(shareController,
+                animated: true,
+                completion: nil)
+        selectedPhotos?.removeAll()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -118,12 +125,10 @@ class PhotosCollectionViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(#function)
         updateNavButtonsState()
     }
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print(#function)
         updateNavButtonsState()
     }
 }
@@ -132,7 +137,6 @@ class PhotosCollectionViewController: UICollectionViewController {
 
 extension PhotosCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
         
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (_) in

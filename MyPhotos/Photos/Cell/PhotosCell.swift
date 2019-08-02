@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class PhotosCell: UICollectionViewCell {
     
@@ -29,24 +30,23 @@ class PhotosCell: UICollectionViewCell {
     }()
     
     override var isSelected: Bool {
-        
         didSet {
-            print(isSelected)
             updateSelectedState()
         }
     }
     
     var unsplashPhoto: UnsplashPhoto! {
         didSet {
-            let photoUrl = unsplashPhoto.urls["small"]
-            photoImageView.setImage(imageURL: photoUrl)
+            let photoUrl = unsplashPhoto.urls["regular"] // спорный момент лично для меня
+            // вот тут надо добавить в url два параметра из разряда max-w max-h чтобы не подгружалась картинка больше чем это необходимо
+            guard let imageUrl = photoUrl, let url = URL(string: imageUrl) else { return }
+            photoImageView.sd_setImage(with: url, completed: nil)
         }
     }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         photoImageView.setImage(imageURL: nil)
-
-
     }
     
     override init(frame: CGRect) {
